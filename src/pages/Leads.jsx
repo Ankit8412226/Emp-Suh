@@ -1,4 +1,4 @@
-
+import axios from 'axios';
 import {
   AlertCircle,
   ArrowLeft,
@@ -21,25 +21,28 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://admin-suh-production.up.railway.app/api/v1';
+
+// Configure axios defaults
+const api = axios.create({
+  baseURL: API_BASE_URL,
+});
+
 const LeadManagementSystem = () => {
   const [leads, setLeads] = useState([]);
   const [filteredLeads, setFilteredLeads] = useState([]);
-  const [currentView, setCurrentView] = useState('list'); // 'list', 'create', 'edit', 'view'
+  const [currentView, setCurrentView] = useState('list');
   const [selectedLead, setSelectedLead] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [isLoading, setIsLoading] = useState(false);
+  const [isPageLoading, setIsPageLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // Mock employees data for assignment
-  const [employees] = useState([
-    { _id: '1', name: 'John Doe', email: 'john@company.com' },
-    { _id: '2', name: 'Jane Smith', email: 'jane@company.com' },
-    { _id: '3', name: 'Mike Johnson', email: 'mike@company.com' }
-  ]);
+  const [employees, setEmployees] = useState([]);
+  const [employeesLoading, setEmployeesLoading] = useState(false);
 
-  // Form state
   const [formData, setFormData] = useState({
     name: '',
     contactNumber: '',
@@ -52,60 +55,40 @@ const LeadManagementSystem = () => {
     notes: ''
   });
 
-  // Mock data - in real app this would come from API
+  const fetchEmployees = async () => {
+    try {
+      setEmployeesLoading(true);
+      const response = await api.get('/employees');
+      setEmployees(response.data.employees || response.data);
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching employees:', err);
+      setError('Failed to load employees. Please try again.');
+    } finally {
+      setEmployeesLoading(false);
+    }
+  };
+
+  const fetchLeads = async () => {
+    try {
+      setIsPageLoading(true);
+      const response = await api.get('/leads');
+      console.log('Fetched leads:', response.data);
+      setLeads(response.data);
+      setFilteredLeads(response.data);
+    } catch (error) {
+      console.error('Error fetching leads:', error);
+      setError('Failed to fetch leads. Please check your connection.');
+    } finally {
+      setIsPageLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const mockLeads = [
-      {
-        _id: '1',
-        name: 'Acme Corporation',
-        contactNumber: '+1-555-0123',
-        email: 'contact@acme.com',
-        source: 'Website',
-        projectName: 'E-commerce Platform',
-        projectDescription: 'Need a complete e-commerce solution with payment integration',
-        reachCount: 3,
-        assignedTo: { _id: '1', name: 'John Doe' },
-        status: 'interested',
-        notes: 'Interested in React-based solution',
-        createdAt: new Date('2024-01-15'),
-        updatedAt: new Date('2024-01-20')
-      },
-      {
-        _id: '2',
-        name: 'Tech Startup Inc',
-        contactNumber: '+1-555-0124',
-        email: 'hello@techstartup.com',
-        source: 'LinkedIn',
-        projectName: 'Mobile App Development',
-        projectDescription: 'iOS and Android app for food delivery',
-        reachCount: 1,
-        assignedTo: { _id: '2', name: 'Jane Smith' },
-        status: 'contacted',
-        notes: 'Initial meeting scheduled',
-        createdAt: new Date('2024-01-18'),
-        updatedAt: new Date('2024-01-18')
-      },
-      {
-        _id: '3',
-        name: 'Global Solutions Ltd',
-        contactNumber: '+1-555-0125',
-        email: 'info@globalsolutions.com',
-        source: 'Referral',
-        projectName: 'CRM System',
-        projectDescription: 'Custom CRM with reporting dashboard',
-        reachCount: 0,
-        assignedTo: null,
-        status: 'new',
-        notes: '',
-        createdAt: new Date('2024-01-22'),
-        updatedAt: new Date('2024-01-22')
-      }
-    ];
-    setLeads(mockLeads);
-    setFilteredLeads(mockLeads);
+    fetchLeads();
+    fetchEmployees();
   }, []);
 
-  // Filter leads based on search and status
   useEffect(() => {
     let filtered = leads;
 
@@ -113,7 +96,7 @@ const LeadManagementSystem = () => {
       filtered = filtered.filter(lead =>
         lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         lead.projectName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        lead.email.toLowerCase().includes(searchTerm.toLowerCase())
+        (lead.email && lead.email.toLowerCase().includes(searchTerm.toLowerCase()))
       );
     }
 
@@ -124,7 +107,6 @@ const LeadManagementSystem = () => {
     setFilteredLeads(filtered);
   }, [leads, searchTerm, statusFilter]);
 
-  // Clear messages after 5 seconds
   useEffect(() => {
     if (error || success) {
       const timer = setTimeout(() => {
@@ -154,78 +136,104 @@ const LeadManagementSystem = () => {
     });
   };
 
-  const handleCreateLead = (e) => {
+  const handleCreateLead = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setError('');
 
-    // Simulate API call
-    setTimeout(() => {
-      const newLead = {
-        _id: Date.now().toString(),
-        ...formData,
-        reachCount: 0,
-        assignedTo: formData.assignedTo ? employees.find(emp => emp._id === formData.assignedTo) : null,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      };
+    try {
+      const payload = { ...formData };
 
-      setLeads(prev => [newLead, ...prev]);
+      // Only include assignedTo if it's selected and not empty
+      if (!payload.assignedTo || payload.assignedTo === '') {
+        delete payload.assignedTo;
+      }
+
+      console.log('Creating lead with payload:', payload);
+      const response = await api.post('/leads', payload);
+      console.log('Lead created:', response.data);
+
       setSuccess('Lead created successfully!');
       resetForm();
       setCurrentView('list');
+      await fetchLeads();
+    } catch (error) {
+      console.error('Error creating lead:', error);
+      setError(error.response?.data?.message || 'Failed to create lead. Please try again.');
+    } finally {
       setIsLoading(false);
-    }, 1000);
-  };
-
-  const handleUpdateLead = (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    setTimeout(() => {
-      setLeads(prev => prev.map(lead =>
-        lead._id === selectedLead._id
-          ? {
-              ...lead,
-              ...formData,
-              assignedTo: formData.assignedTo ? employees.find(emp => emp._id === formData.assignedTo) : null,
-              updatedAt: new Date()
-            }
-          : lead
-      ));
-      setSuccess('Lead updated successfully!');
-      setCurrentView('list');
-      setSelectedLead(null);
-      setIsLoading(false);
-    }, 1000);
-  };
-
-  const handleDeleteLead = (leadId) => {
-    if (window.confirm('Are you sure you want to delete this lead?')) {
-      setLeads(prev => prev.filter(lead => lead._id !== leadId));
-      setSuccess('Lead deleted successfully!');
     }
   };
 
-  const handleIncrementReachCount = (leadId) => {
-    setLeads(prev => prev.map(lead =>
-      lead._id === leadId
-        ? { ...lead, reachCount: lead.reachCount + 1, updatedAt: new Date() }
-        : lead
-    ));
-    setSuccess('Reach count updated!');
+  const handleUpdateLead = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const payload = { ...formData };
+
+      // Only include assignedTo if it's selected and not empty
+      if (!payload.assignedTo || payload.assignedTo === '') {
+        delete payload.assignedTo;
+      }
+
+      console.log('Updating lead with payload:', payload);
+      const response = await api.put(`/leads/${selectedLead._id}`, payload);
+      console.log('Lead updated:', response.data);
+
+      setSuccess('Lead updated successfully!');
+      setCurrentView('list');
+      setSelectedLead(null);
+      await fetchLeads();
+    } catch (error) {
+      console.error('Error updating lead:', error);
+      setError(error.response?.data?.message || 'Failed to update lead. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeleteLead = async (leadId) => {
+    if (!window.confirm('Are you sure you want to delete this lead?')) {
+      return;
+    }
+
+    try {
+      console.log('Deleting lead:', leadId);
+      await api.delete(`/leads/${leadId}`);
+      setSuccess('Lead deleted successfully!');
+      await fetchLeads();
+    } catch (error) {
+      console.error('Error deleting lead:', error);
+      setError(error.response?.data?.message || 'Failed to delete lead. Please try again.');
+    }
+  };
+
+  const handleIncrementReachCount = async (leadId) => {
+    try {
+      console.log('Incrementing reach count for lead:', leadId);
+      const response = await api.patch(`/leads/reach/${leadId}`);
+      console.log('Reach count updated:', response.data);
+      setSuccess('Reach count updated!');
+      await fetchLeads();
+    } catch (error) {
+      console.error('Error updating reach count:', error);
+      setError(error.response?.data?.message || 'Failed to update reach count. Please try again.');
+    }
   };
 
   const startEdit = (lead) => {
     setSelectedLead(lead);
     setFormData({
-      name: lead.name,
-      contactNumber: lead.contactNumber,
+      name: lead.name || '',
+      contactNumber: lead.contactNumber || '',
       email: lead.email || '',
       source: lead.source || '',
-      projectName: lead.projectName,
+      projectName: lead.projectName || '',
       projectDescription: lead.projectDescription || '',
       assignedTo: lead.assignedTo?._id || '',
-      status: lead.status,
+      status: lead.status || 'new',
       notes: lead.notes || ''
     });
     setCurrentView('edit');
@@ -266,11 +274,22 @@ const LeadManagementSystem = () => {
     });
   };
 
+  if (isPageLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <h3 className="text-lg font-medium text-slate-800 mb-2">Loading Leads...</h3>
+          <p className="text-slate-600">Please wait while we fetch your data.</p>
+        </div>
+      </div>
+    );
+  }
+
   if (currentView === 'create' || currentView === 'edit') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-3">
         <div className="max-w-4xl mx-auto space-y-4">
-          {/* Header */}
           <div className="flex items-center justify-between bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
             <div className="flex items-center space-x-3">
               <button
@@ -289,7 +308,6 @@ const LeadManagementSystem = () => {
             </div>
           </div>
 
-          {/* Error/Success Messages */}
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-xl p-3">
               <div className="flex items-center space-x-2">
@@ -308,7 +326,6 @@ const LeadManagementSystem = () => {
             </div>
           )}
 
-          {/* Form */}
           <form onSubmit={currentView === 'create' ? handleCreateLead : handleUpdateLead} className="space-y-4">
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
               <h2 className="text-lg font-semibold text-slate-800 mb-4">Lead Information</h2>
@@ -384,12 +401,15 @@ const LeadManagementSystem = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Assign To</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Assign To {employeesLoading && <span className="text-xs text-slate-500">(Loading...)</span>}
+                  </label>
                   <select
                     name="assignedTo"
                     value={formData.assignedTo}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    disabled={employeesLoading}
+                    className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
                   >
                     <option value="">Select employee</option>
                     {employees.map(employee => (
@@ -479,7 +499,6 @@ const LeadManagementSystem = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-3">
         <div className="max-w-4xl mx-auto space-y-4">
-          {/* Header */}
           <div className="flex items-center justify-between bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
             <div className="flex items-center space-x-3">
               <button
@@ -504,7 +523,6 @@ const LeadManagementSystem = () => {
             </div>
           </div>
 
-          {/* Lead Info Card */}
           <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
             <div className="flex items-start justify-between mb-6">
               <div className="flex items-center space-x-4">
@@ -523,7 +541,6 @@ const LeadManagementSystem = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* Contact Info */}
               <div className="space-y-4">
                 <h3 className="font-semibold text-slate-800 border-b pb-2">Contact Information</h3>
                 <div className="space-y-3">
@@ -546,7 +563,6 @@ const LeadManagementSystem = () => {
                 </div>
               </div>
 
-              {/* Project Info */}
               <div className="space-y-4">
                 <h3 className="font-semibold text-slate-800 border-b pb-2">Project Details</h3>
                 <div className="space-y-3">
@@ -563,7 +579,6 @@ const LeadManagementSystem = () => {
                 </div>
               </div>
 
-              {/* Assignment & Stats */}
               <div className="space-y-4">
                 <h3 className="font-semibold text-slate-800 border-b pb-2">Assignment & Stats</h3>
                 <div className="space-y-3">
@@ -575,7 +590,7 @@ const LeadManagementSystem = () => {
                   )}
                   <div className="flex items-center space-x-3">
                     <TrendingUp className="w-4 h-4 text-slate-600" />
-                    <span className="text-slate-700">Reach Count: {selectedLead.reachCount}</span>
+                    <span className="text-slate-700">Reach Count: {selectedLead.reachCount || 0}</span>
                     <button
                       onClick={() => handleIncrementReachCount(selectedLead._id)}
                       className="p-1 hover:bg-blue-100 rounded-lg transition-all duration-200"
@@ -613,7 +628,6 @@ const LeadManagementSystem = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-3">
       <div className="max-w-7xl mx-auto space-y-4">
-        {/* Header */}
         <div className="flex items-center justify-between bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
@@ -630,7 +644,6 @@ const LeadManagementSystem = () => {
           </button>
         </div>
 
-        {/* Error/Success Messages */}
         {error && (
           <div className="bg-red-50 border border-red-200 rounded-xl p-3">
             <div className="flex items-center space-x-2">
@@ -649,7 +662,6 @@ const LeadManagementSystem = () => {
           </div>
         )}
 
-        {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
             <div className="flex items-center space-x-3">
@@ -678,7 +690,6 @@ const LeadManagementSystem = () => {
           </div>
         </div>
 
-        {/* Search and Filter */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 relative">
@@ -706,7 +717,6 @@ const LeadManagementSystem = () => {
           </div>
         </div>
 
-        {/* Leads Table */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-200">
             <h2 className="text-lg font-semibold text-slate-800">
@@ -820,7 +830,7 @@ const LeadManagementSystem = () => {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center space-x-2">
-                          <span className="text-sm font-medium text-slate-700">{lead.reachCount}</span>
+                          <span className="text-sm font-medium text-slate-700">{lead.reachCount || 0}</span>
                           <button
                             onClick={() => handleIncrementReachCount(lead._id)}
                             className="p-1 hover:bg-blue-100 rounded-lg transition-all duration-200"
