@@ -9,10 +9,10 @@ import {
   BarChart3,
   Calendar,
   CheckSquare,
-  Settings,
-  UserPlus
+  Settings
 } from 'lucide-react';
 import AttendancePage from './pages/Attendance';
+import LeadManagementSystem from './pages/Leads';
 
 const App = () => {
   return (
@@ -44,10 +44,7 @@ const App = () => {
         <Route
           path="leads"
           element={
-            <ComingSoon
-              icon={UserPlus}
-              title="Lead Management"
-              description="Manage prospects, track sales pipeline, and convert leads"
+            <LeadManagementSystem
             />
           }
         />
