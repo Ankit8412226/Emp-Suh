@@ -7,12 +7,12 @@ import Login from './pages/login';
 
 import {
   BarChart3,
-  Calendar,
   CheckSquare,
   Settings
 } from 'lucide-react';
 import AttendancePage from './pages/Attendance';
 import LeadManagementSystem from './pages/Leads';
+import LeaveManagement from './pages/Leaves';
 
 const App = () => {
   return (
@@ -51,11 +51,7 @@ const App = () => {
         <Route
           path="leaves"
           element={
-            <ComingSoon
-              icon={Calendar}
-              title="Leave Management"
-              description="Handle leave requests, approvals, and employee time-off tracking"
-            />
+     <LeaveManagement/>
           }
         />
         <Route
