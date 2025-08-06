@@ -14,7 +14,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 const Sidebar = ({ isOpen, setIsOpen, currentUser }) => {
   const { pathname } = useLocation();
-  const userRole = 'admin'; // You can fetch from localStorage/context
+  const userRole = currentUser?.role; // You can fetch from localStorage/context
 
   const sidebarItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/' },

@@ -12,16 +12,21 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-const Sidebar = ({ isOpen, setIsOpen, currentUser }) => {
+const Sidebar = ({ isOpen, setIsOpen }) => {
   const [activeItem, setActiveItem] = useState('dashboard');
   const [isMobile, setIsMobile] = useState(false);
-  const userRole = 'admin';
-
-  if (!currentUser || !currentUser.name) {
-    return null;
-  }
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
+    const empData = localStorage.getItem('emp');
+    if (empData) {
+      try {
+        setCurrentUser(JSON.parse(empData));
+      } catch (err) {
+        console.error("Failed to parse emp data", err);
+      }
+    }
+
     const checkIsMobile = () => {
       setIsMobile(window.innerWidth < 1024);
     };
@@ -30,6 +35,12 @@ const Sidebar = ({ isOpen, setIsOpen, currentUser }) => {
     window.addEventListener('resize', checkIsMobile);
     return () => window.removeEventListener('resize', checkIsMobile);
   }, []);
+
+  if (!currentUser || !currentUser.name) {
+    return null;
+  }
+
+  const userRole = currentUser.role;
 
   const sidebarItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/' },
@@ -52,8 +63,11 @@ const Sidebar = ({ isOpen, setIsOpen, currentUser }) => {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem('emp');
     console.log('Logout clicked');
+    // You can redirect to login page here
   };
+
 
   return (
     <>

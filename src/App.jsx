@@ -7,12 +7,12 @@ import Login from './pages/login';
 
 import {
   BarChart3,
-  CheckSquare,
   Settings
 } from 'lucide-react';
 import AttendancePage from './pages/Attendance';
 import LeadManagementSystem from './pages/Leads';
 import LeaveManagement from './pages/Leaves';
+import TaskManagementBoard from './pages/Task';
 
 const App = () => {
   return (
@@ -34,11 +34,7 @@ const App = () => {
         <Route
           path="tasks"
           element={
-            <ComingSoon
-              icon={CheckSquare}
-              title="Task Management"
-              description="Assign, track, and manage team tasks and projects"
-            />
+        <TaskManagementBoard/>
           }
         />
         <Route
