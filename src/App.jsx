@@ -1,75 +1,71 @@
-import { Route, Routes } from 'react-router-dom';
+import { BarChart3, Settings } from 'lucide-react';
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import ComingSoon from './components/ComingSoon';
 import Layout from './components/Layout';
+import AttendancePage from './pages/Attendance';
 import Dashboard from './pages/Dashboard';
 import Employees from './pages/EmployeesPage';
-import Login from './pages/login';
-
-import {
-  BarChart3,
-  Settings
-} from 'lucide-react';
-import AttendancePage from './pages/Attendance';
 import LeadManagementSystem from './pages/Leads';
 import LeaveManagement from './pages/Leaves';
+import Login from './pages/login';
 import TaskManagementBoard from './pages/Task';
+
+// Function to check token validity
+const isTokenValid = () => {
+  const token = localStorage.getItem('authToken');
+  if (!token) return false;
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const currentTime = Math.floor(Date.now() / 1000);
+    return payload.exp > currentTime;
+  } catch (error) {
+    return false;
+  }
+};
+
+// Wrapper for protected routes
+const ProtectedRoute = () => {
+  return isTokenValid() ? <Outlet /> : <Navigate to="/login" replace />;
+};
 
 const App = () => {
   return (
     <Routes>
-      {/* Login route (outside layout) */}
+      {/* Public route */}
       <Route path="/login" element={<Login />} />
 
-      {/* Protected layout routes */}
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Dashboard />} />
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="employees" element={<Employees />} />
-        <Route
-          path="attendance"
-          element={
-       <AttendancePage/>
-          }
-        />
-        <Route
-          path="tasks"
-          element={
-        <TaskManagementBoard/>
-          }
-        />
-        <Route
-          path="leads"
-          element={
-            <LeadManagementSystem
-            />
-          }
-        />
-        <Route
-          path="leaves"
-          element={
-     <LeaveManagement/>
-          }
-        />
-        <Route
-          path="reports"
-          element={
-            <ComingSoon
-              icon={BarChart3}
-              title="Reports & Analytics"
-              description="Generate insights, performance metrics, and detailed reports"
-            />
-          }
-        />
-        <Route
-          path="settings"
-          element={
-            <ComingSoon
-              icon={Settings}
-              title="System Settings"
-              description="Configure system preferences, user roles, and application settings"
-            />
-          }
-        />
+      {/* Protected routes */}
+      <Route path="/" element={<ProtectedRoute />}>
+        <Route element={<Layout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="employees" element={<Employees />} />
+          <Route path="attendance" element={<AttendancePage />} />
+          <Route path="tasks" element={<TaskManagementBoard />} />
+          <Route path="leads" element={<LeadManagementSystem />} />
+          <Route path="leaves" element={<LeaveManagement />} />
+          <Route
+            path="reports"
+            element={
+              <ComingSoon
+                icon={BarChart3}
+                title="Reports & Analytics"
+                description="Generate insights, performance metrics, and detailed reports"
+              />
+            }
+          />
+          <Route
+            path="settings"
+            element={
+              <ComingSoon
+                icon={Settings}
+                title="System Settings"
+                description="Configure system preferences, user roles, and application settings"
+              />
+            }
+          />
+        </Route>
       </Route>
 
       {/* 404 Fallback */}
