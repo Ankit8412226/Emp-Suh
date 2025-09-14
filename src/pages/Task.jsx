@@ -23,7 +23,7 @@ import {
 import { useEffect, useState } from "react";
 
 
-const API_BASE_URL = "https://erp.suhtech.shop/api/v1";
+const API_BASE_URL = 'https://erp.suhtech.shop/api/v1';
 
 
 const apiClient = axios.create({
