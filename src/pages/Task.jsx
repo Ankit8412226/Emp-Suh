@@ -22,7 +22,11 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
+<<<<<<< HEAD
 const API_BASE_URL = "https://admin-suh-production.up.railway.app/api/v1";
+=======
+const API_BASE_URL = 'https://erp.suhtech.shop/api/v1';
+>>>>>>> 75de147 (fixed)
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,

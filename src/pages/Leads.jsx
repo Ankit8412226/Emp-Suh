@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://admin-suh-production.up.railway.app/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://erp.suhtech.shop/api/v1';
 
 // Configure axios defaults
 const api = axios.create({
