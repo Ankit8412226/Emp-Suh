@@ -78,7 +78,7 @@ const Dashboard = () => {
     trend,
     description,
   }) => (
-    <div className="bg-white rounded-2xl p-4 sm:p-5 lg:p-6 border border-gray-100 hover:border-green-200 transition-all duration-300 group">
+    <div className="bg-white rounded-2xl p-4 sm:p-5 lg:p-6 border border-gray-100 hover:border-blue-200 transition-all duration-300 group">
       <div className="flex items-start justify-between">
         <div className="flex-1 min-w-0">
           <div className="flex items-center space-x-2 mb-2">
@@ -148,7 +148,7 @@ const Dashboard = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-center min-h-96">
           <div className="flex flex-col items-center space-y-4">
-            <RefreshCw className="w-8 h-8 text-green-600 animate-spin" />
+            <RefreshCw className="w-8 h-8 text-blue-600 animate-spin" />
             <p className="text-gray-600">Loading dashboard...</p>
           </div>
         </div>
@@ -169,7 +169,7 @@ const Dashboard = () => {
             <p className="text-gray-600 mb-4">{error}</p>
             <button
               onClick={fetchDashboardData}
-              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
               Try Again
             </button>
@@ -202,7 +202,7 @@ const Dashboard = () => {
         <div className="flex flex-col xs:flex-row items-stretch xs:items-center space-y-2 xs:space-y-0 xs:space-x-3">
           <button
             onClick={fetchDashboardData}
-            className="bg-gradient-to-r from-green-600 to-green-700 text-white px-4 sm:px-5 lg:px-6 py-2.5 sm:py-3 rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 flex items-center justify-center"
+            className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 sm:px-5 lg:px-6 py-2.5 sm:py-3 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 flex items-center justify-center"
           >
             <RefreshCw
               className={`w-4 h-4 sm:w-5 sm:h-5 mr-2 ${
@@ -261,7 +261,7 @@ const Dashboard = () => {
             <h3 className="text-lg sm:text-xl font-bold text-gray-800">
               Recent Activities
             </h3>
-            <button className="text-sm text-green-600 hover:text-green-700 font-semibold">
+            <button className="text-sm text-blue-600 hover:text-blue-700 font-semibold">
               View All
             </button>
           </div>
@@ -304,7 +304,7 @@ const Dashboard = () => {
               icon={Clock}
               title="Mark Attendance"
               description="Check in/out"
-              color="bg-gradient-to-br from-green-50 to-green-100 hover:from-green-100 hover:to-green-200"
+              color="bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200"
               onClick={() => navigate("/attendance")}
             />
             <QuickActionCard

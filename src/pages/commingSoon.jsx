@@ -6,8 +6,8 @@ const ComingSoon = ({ icon: Icon, title, description }) => {
       </div>
       <h2 className="text-2xl font-bold text-gray-700 mb-2">{title}</h2>
       <p className="text-gray-600 mb-8">{description || `${title} functionality is coming soon`}</p>
-      <div className="bg-green-50 border border-green-200 rounded-lg p-4 max-w-md">
-        <p className="text-green-700 text-sm">
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-md">
+        <p className="text-blue-700 text-sm">
           🚀 We're working hard to bring you this feature. Stay tuned for updates!
         </p>
       </div>

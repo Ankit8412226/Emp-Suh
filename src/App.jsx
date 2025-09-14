@@ -1,13 +1,16 @@
-import { BarChart3, Settings } from 'lucide-react';
+import { Settings } from 'lucide-react';
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
-import ComingSoon from './components/ComingSoon';
 import Layout from './components/Layout';
+import Announcements from './pages/Announcements';
 import AttendancePage from './pages/Attendance';
 import Dashboard from './pages/Dashboard';
+import EmployeeProfile from './pages/EmployeeProfile';
 import Employees from './pages/EmployeesPage';
 import LeadManagementSystem from './pages/Leads';
 import LeaveManagement from './pages/Leaves';
 import Login from './pages/login';
+import Notifications from './pages/Notifications';
+import Reports from './pages/Reports';
 import TaskManagementBoard from './pages/Task';
 
 // Function to check token validity
@@ -19,7 +22,7 @@ const isTokenValid = () => {
     const payload = JSON.parse(atob(token.split('.')[1]));
     const currentTime = Math.floor(Date.now() / 1000);
     return payload.exp > currentTime;
-  } catch (error) {
+  } catch {
     return false;
   }
 };
@@ -45,26 +48,11 @@ const App = () => {
           <Route path="tasks" element={<TaskManagementBoard />} />
           <Route path="leads" element={<LeadManagementSystem />} />
           <Route path="leaves" element={<LeaveManagement />} />
-          <Route
-            path="reports"
-            element={
-              <ComingSoon
-                icon={BarChart3}
-                title="Reports & Analytics"
-                description="Generate insights, performance metrics, and detailed reports"
-              />
-            }
-          />
-          <Route
-            path="settings"
-            element={
-              <ComingSoon
-                icon={Settings}
-                title="System Settings"
-                description="Configure system preferences, user roles, and application settings"
-              />
-            }
-          />
+          <Route path="reports" element={<Reports />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="announcements" element={<Announcements />} />
+          <Route path="notifications" element={<Notifications />} />
+          <Route path="employee-profile" element={<EmployeeProfile />} />
         </Route>
       </Route>
 
@@ -72,14 +60,14 @@ const App = () => {
       <Route
         path="*"
         element={
-          <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-white">
+          <div className="min-h-screen flex items-center justify-center bg-gray-50">
             <div className="text-center">
               <h1 className="text-6xl font-bold text-gray-300 mb-4">404</h1>
               <h2 className="text-2xl font-bold text-gray-700 mb-4">Page Not Found</h2>
               <p className="text-gray-600 mb-8">The page you're looking for doesn't exist.</p>
               <a
                 href="/"
-                className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors"
+                className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
               >
                 Go Back Home
               </a>

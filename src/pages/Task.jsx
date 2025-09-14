@@ -112,7 +112,6 @@ const Modal = ({ isOpen, onClose, title, children, size = "md" }) => {
 const TaskCard = ({
   task,
   moveTask,
-  updateStatus,
   onDelete,
   onApprove,
   onViewDescription,
@@ -158,7 +157,7 @@ const TaskCard = ({
       case "medium":
         return "text-yellow-600 bg-yellow-50 border-yellow-200";
       case "low":
-        return "text-green-600 bg-green-50 border-green-200";
+        return "text-blue-600 bg-blue-50 border-blue-200";
       default:
         return "text-gray-600 bg-gray-50 border-gray-200";
     }
@@ -173,16 +172,12 @@ const TaskCard = ({
       case "medium":
         return "border-l-yellow-500";
       case "low":
-        return "border-l-green-500";
+        return "border-l-blue-500";
       default:
         return "border-l-gray-300";
     }
   };
 
-  const getFirstLetter = (name) => {
-    if (!name || typeof name !== "string") return "?";
-    return name.trim().charAt(0).toUpperCase();
-  };
 
   return (
     <div
@@ -227,7 +222,7 @@ const TaskCard = ({
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={() => setIsExpanded(!isExpanded)}
-                    className="text-xs text-green-600 hover:text-green-700 font-medium transition-colors"
+                    className="text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors"
                   >
                     {isExpanded ? "Show less" : "Show more"}
                   </button>
@@ -250,7 +245,7 @@ const TaskCard = ({
           <div className="flex items-center space-x-3">
             {/* Avatar - FIXED THIS PART */}
             <div className="relative inline-flex items-center justify-center h-6 w-6 flex-shrink-0">
-              <div className="flex items-center justify-center w-full h-full rounded-full bg-green-600 text-white font-semibold text-xs">
+              <div className="flex items-center justify-center w-full h-full rounded-full bg-blue-600 text-white font-semibold text-xs">
                 {assignedEmployee?.name?.charAt(0)?.toUpperCase() || "?"}
               </div>
             </div>
@@ -289,7 +284,7 @@ const TaskCard = ({
                 <button
                   title="Move Back"
                   onClick={() => moveTask(task, "backward")}
-                  className="h-7 w-7 p-0 text-green-600 hover:text-green-700 hover:bg-green-50 rounded transition-all duration-200 flex items-center justify-center"
+                  className="h-7 w-7 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded transition-all duration-200 flex items-center justify-center"
                 >
                   <ArrowLeft className="h-3 w-3" />
                 </button>
@@ -299,7 +294,7 @@ const TaskCard = ({
                 <button
                   title="Move Forward"
                   onClick={() => moveTask(task, "forward")}
-                  className="h-7 w-7 p-0 text-green-600 hover:text-green-700 hover:bg-green-50 rounded transition-all duration-200 flex items-center justify-center"
+                  className="h-7 w-7 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded transition-all duration-200 flex items-center justify-center"
                 >
                   <ArrowRight className="h-3 w-3" />
                 </button>
@@ -312,7 +307,7 @@ const TaskCard = ({
                 <button
                   title="Approve Task"
                   onClick={() => onApprove(task._id, true)}
-                  className="h-7 w-7 p-0 text-green-600 hover:text-green-700 hover:bg-green-50 rounded transition-all duration-200 flex items-center justify-center"
+                  className="h-7 w-7 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded transition-all duration-200 flex items-center justify-center"
                 >
                   <Check className="h-3 w-3" />
                 </button>
@@ -379,7 +374,7 @@ const TaskColumn = ({
       case "in-progress":
         return "bg-blue-50 border-blue-200";
       case "completed":
-        return "bg-green-50 border-green-200";
+        return "bg-blue-50 border-blue-200";
       case "waiting-for-approval":
         return "bg-yellow-50 border-yellow-200";
       default:
@@ -391,7 +386,7 @@ const TaskColumn = ({
     <div className="flex-1 min-w-[300px] max-w-[350px]">
       <div
         className={`transition-all duration-200 bg-white rounded-2xl border shadow-sm ${
-          isDragOver ? "border-green-500 bg-green-50" : getStatusStyles(status)
+          isDragOver ? "border-blue-500 bg-blue-50" : getStatusStyles(status)
         }`}
       >
         {/* Column Header */}
@@ -409,7 +404,7 @@ const TaskColumn = ({
             {status === "pending" && (
               <button
                 onClick={() => onAddTask()}
-                className="h-8 w-8 p-0 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded transition-all duration-200 flex items-center justify-center"
+                className="h-8 w-8 p-0 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-all duration-200 flex items-center justify-center"
                 title="Add new task"
               >
                 <Plus className="h-4 w-4" />
@@ -429,7 +424,7 @@ const TaskColumn = ({
           {status === "pending" && (
             <button
               onClick={() => onAddTask()}
-              className="w-full mb-3 h-auto py-4 border-2 border-dashed border-gray-300 hover:border-green-500 hover:text-green-600 hover:bg-green-50 transition-all duration-200 rounded-xl text-gray-600 font-medium flex items-center justify-center"
+              className="w-full mb-3 h-auto py-4 border-2 border-dashed border-gray-300 hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 rounded-xl text-gray-600 font-medium flex items-center justify-center"
             >
               <Plus className="h-4 w-4 mr-2" />
               Create issue
@@ -457,8 +452,8 @@ const TaskColumn = ({
 
           {/* Drop Indicator */}
           {isDragOver && (
-            <div className="border-2 border-dashed border-green-500 rounded-xl p-4 mt-3 bg-green-50">
-              <p className="text-green-600 text-center text-sm font-medium">
+            <div className="border-2 border-dashed border-blue-500 rounded-xl p-4 mt-3 bg-blue-50">
+              <p className="text-blue-600 text-center text-sm font-medium">
                 Drop here to move task
               </p>
             </div>
@@ -471,7 +466,7 @@ const TaskColumn = ({
 
 const LoadingSpinner = () => (
   <div className="flex items-center justify-center p-8">
-    <Loader className="w-8 h-8 animate-spin text-green-600" />
+    <Loader className="w-8 h-8 animate-spin text-blue-600" />
   </div>
 );
 
@@ -716,7 +711,7 @@ const TaskManagementBoard = () => {
               placeholder="Search tasks..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 w-64"
+              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 w-64"
             />
           </div>
 
@@ -726,7 +721,7 @@ const TaskManagementBoard = () => {
             <select
               value={selectedEmployee}
               onChange={(e) => setSelectedEmployee(e.target.value)}
-              className="appearance-none bg-white border border-gray-300 rounded-lg pl-10 pr-8 py-2 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+              className="appearance-none bg-white border border-gray-300 rounded-lg pl-10 pr-8 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
               disabled={employeesLoading}
             >
               <option value="">All assignees</option>
@@ -779,7 +774,7 @@ const TaskManagementBoard = () => {
         {selectedTask && (
           <div className="space-y-6">
             {/* Task Header */}
-            <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-6 border border-gray-100">
+            <div className="bg-gradient-to-r from-blue-50 to-blue-50 rounded-xl p-6 border border-gray-100">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1 min-w-0">
                   <h4 className="text-2xl font-bold text-gray-800 mb-2 break-words leading-tight">
@@ -794,7 +789,7 @@ const TaskManagementBoard = () => {
                           ? "text-red-600 bg-red-50 border-red-200"
                           : selectedTask.priority === "medium"
                           ? "text-yellow-600 bg-yellow-50 border-yellow-200"
-                          : "text-green-600 bg-green-50 border-green-200"
+                          : "text-blue-600 bg-blue-50 border-blue-200"
                       }`}
                     >
                       <AlertCircle className="h-4 w-4 mr-1" />
@@ -834,7 +829,7 @@ const TaskManagementBoard = () => {
                 </label>
                 <div className="flex items-center space-x-3">
                   <div className="relative inline-flex items-center justify-center h-10 w-10">
-                    <div className="flex items-center justify-center w-full h-full rounded-full bg-green-600 text-white font-semibold">
+                    <div className="flex items-center justify-center w-full h-full rounded-full bg-blue-600 text-white font-semibold">
                       {employees
                         .find(
                           (emp) =>
@@ -978,7 +973,7 @@ const TaskManagementBoard = () => {
                 setNewTask((prev) => ({ ...prev, title: e.target.value }))
               }
               placeholder="Enter a descriptive task title"
-              className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+              className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
             />
           </div>
 
@@ -992,7 +987,7 @@ const TaskManagementBoard = () => {
                 setNewTask((prev) => ({ ...prev, description: e.target.value }))
               }
               rows={4}
-              className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none transition-all duration-200"
+              className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all duration-200"
               placeholder="Describe the task requirements and goals"
             />
           </div>
@@ -1012,7 +1007,7 @@ const TaskManagementBoard = () => {
                       assignedTo: e.target.value,
                     }))
                   }
-                  className="w-full appearance-none pl-10 pr-8 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 bg-white"
+                  className="w-full appearance-none pl-10 pr-8 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
                   disabled={employeesLoading}
                 >
                   <option value="">Select assignee</option>
@@ -1040,7 +1035,7 @@ const TaskManagementBoard = () => {
                       priority: e.target.value,
                     }))
                   }
-                  className="w-full appearance-none pl-10 pr-8 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 bg-white"
+                  className="w-full appearance-none pl-10 pr-8 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
                 >
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
@@ -1064,7 +1059,7 @@ const TaskManagementBoard = () => {
                 onChange={(e) =>
                   setNewTask((prev) => ({ ...prev, dueDate: e.target.value }))
                 }
-                className="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                className="w-full pl-10 p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
               />
             </div>
           </div>
@@ -1073,7 +1068,7 @@ const TaskManagementBoard = () => {
             <button
               onClick={addNewTask}
               disabled={actionLoading}
-              className="flex-1 bg-gradient-to-r from-green-600 to-green-700 text-white py-3 px-6 rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 font-semibold disabled:opacity-50 flex items-center justify-center"
+              className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-6 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-semibold disabled:opacity-50 flex items-center justify-center"
             >
               {actionLoading ? (
                 <Loader className="w-4 h-4 animate-spin mr-2" />

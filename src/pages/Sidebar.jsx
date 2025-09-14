@@ -79,15 +79,15 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       )}
 
       <aside
-        className={`fixed top-0 left-0 bottom-0 bg-white shadow-2xl border-r border-green-100 transition-transform duration-300 ease-in-out z-40
+        className={`fixed top-0 left-0 bottom-0 bg-white shadow-2xl border-r border-gray-200 transition-transform duration-300 ease-in-out z-40
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         w-full xs:w-80 sm:w-72 lg:w-64 xl:w-72 flex flex-col max-w-sm pt-[64px] sm:pt-[80px]`}
       >
         {/* Header */}
-        <div className="flex-shrink-0 px-3 sm:px-4 lg:px-5 py-2 sm:py-3 lg:py-4 border-b border-green-100 bg-gradient-to-r from-green-50 to-white">
+        <div className="flex-shrink-0 px-3 sm:px-4 lg:px-5 py-2 sm:py-3 lg:py-4 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-r from-green-600 to-green-700 rounded-lg flex items-center justify-center shadow-lg">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg flex items-center justify-center shadow-lg">
                 <LayoutDashboard className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
               <div className="min-w-0 flex-1">
@@ -114,12 +114,12 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                 onClick={() => handleItemClick(item.id)}
                 className={`w-full group flex items-center space-x-2 sm:space-x-3 px-2 sm:px-3 py-2.5 sm:py-3 rounded-lg transition-all duration-200 text-left ${
                   isActive
-                    ? 'bg-gradient-to-r from-green-100 to-green-50 text-green-700 border border-green-200 shadow-sm scale-105'
+                    ? 'bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 border border-blue-200 shadow-sm scale-105'
                     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800 active:bg-gray-100 hover:scale-102'
                 } transform`}
               >
                 <item.icon className={`w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 transition-all duration-200 group-hover:scale-110 ${
-                  isActive ? 'text-green-600' : 'text-gray-500 group-hover:text-gray-700'
+                  isActive ? 'text-blue-600' : 'text-gray-500 group-hover:text-gray-700'
                 }`} />
                 <span className="font-medium text-xs sm:text-sm truncate flex-1">{item.label}</span>
               </button>
@@ -128,9 +128,9 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         </nav>
 
         {/* User Profile & Logout */}
-        <div className="flex-shrink-0 px-2 sm:px-3 lg:px-4 py-3 sm:py-4 lg:py-5 border-t border-green-100 bg-gradient-to-r from-gray-50 to-white">
+        <div className="flex-shrink-0 px-2 sm:px-3 lg:px-4 py-3 sm:py-4 lg:py-5 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-white">
           <div className="flex items-center space-x-2 sm:space-x-3 mb-3 p-2 sm:p-3 bg-white rounded-lg shadow-sm border border-gray-100">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
               <span className="text-white font-bold text-xs sm:text-sm">
                 {currentUser.name.split(' ').map(n => n[0]).join('')}
               </span>
@@ -138,7 +138,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             <div className="min-w-0 flex-1">
               <p className="text-xs sm:text-sm font-semibold text-gray-800 truncate">{currentUser.name}</p>
               <p className="text-xs text-gray-500 capitalize flex items-center">
-                <span className="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5 animate-pulse"></span>
+                <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-1.5 animate-pulse"></span>
                 {userRole}
               </p>
             </div>

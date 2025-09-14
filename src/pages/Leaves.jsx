@@ -140,7 +140,7 @@ const LeaveManagement = () => {
       });
 
       if (response.ok) {
-        const result = await response.json();
+        await response.json();
         fetchLeaves(); // Refresh the list
         setShowConfirmModal(false);
         alert(`Leave ${status} successfully!`);
@@ -169,7 +169,7 @@ const LeaveManagement = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'approved': return 'text-green-600 bg-green-50 border-green-200';
+      case 'approved': return 'text-blue-600 bg-blue-50 border-blue-200';
       case 'rejected': return 'text-red-600 bg-red-50 border-red-200';
       default: return 'text-yellow-600 bg-yellow-50 border-yellow-200';
     }
@@ -226,7 +226,7 @@ const LeaveManagement = () => {
             onClick={() => setActiveTab('apply')}
             className={`flex-1 py-3 px-4 text-sm font-semibold rounded-xl transition-all duration-200 ${
               activeTab === 'apply'
-                ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg'
+                ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg'
                 : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
             }`}
           >
@@ -237,7 +237,7 @@ const LeaveManagement = () => {
             onClick={() => setActiveTab('history')}
             className={`flex-1 py-3 px-4 text-sm font-semibold rounded-xl transition-all duration-200 ${
               activeTab === 'history'
-                ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg'
+                ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg'
                 : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
             }`}
           >
@@ -249,7 +249,7 @@ const LeaveManagement = () => {
               onClick={() => setActiveTab('manage')}
               className={`flex-1 py-3 px-4 text-sm font-semibold rounded-xl transition-all duration-200 ${
                 activeTab === 'manage'
-                  ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg'
+                  ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg'
                   : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
               }`}
             >
@@ -264,7 +264,7 @@ const LeaveManagement = () => {
       {activeTab === 'apply' && (
         <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
           <div className="flex items-center mb-6">
-            <Calendar className="w-6 h-6 text-green-600 mr-3" />
+            <Calendar className="w-6 h-6 text-blue-600 mr-3" />
             <h2 className="text-xl font-bold text-gray-800">Apply for Leave</h2>
           </div>
 
@@ -279,7 +279,7 @@ const LeaveManagement = () => {
                   value={formData.startDate}
                   onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
                   min={new Date().toISOString().split('T')[0]}
-                  className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                  className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                   required
                 />
               </div>
@@ -293,17 +293,17 @@ const LeaveManagement = () => {
                   value={formData.endDate}
                   onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
                   min={formData.startDate || new Date().toISOString().split('T')[0]}
-                  className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                  className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                   required
                 />
               </div>
             </div>
 
             {formData.startDate && formData.endDate && (
-              <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
                 <div className="flex items-center">
-                  <CalendarDays className="w-5 h-5 text-green-600 mr-2" />
-                  <span className="text-green-800 font-medium">
+                  <CalendarDays className="w-5 h-5 text-blue-600 mr-2" />
+                  <span className="text-blue-800 font-medium">
                     Total Days: {calculateDays(formData.startDate, formData.endDate)}
                   </span>
                 </div>
@@ -318,7 +318,7 @@ const LeaveManagement = () => {
                 value={formData.reason}
                 onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
                 rows="4"
-                className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none transition-all duration-200"
+                className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all duration-200"
                 placeholder="Please provide a detailed reason for your leave request..."
                 required
               />
@@ -327,7 +327,7 @@ const LeaveManagement = () => {
             <button
               onClick={handleApplyLeave}
               disabled={loading}
-              className="w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-3 px-6 rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-200 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-6 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <div className="flex items-center justify-center">
@@ -360,7 +360,7 @@ const LeaveManagement = () => {
                     placeholder="Search leaves..."
                     value={filters.search}
                     onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                   />
                 </div>
 
@@ -368,7 +368,7 @@ const LeaveManagement = () => {
                   <select
                     value={filters.status}
                     onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-                    className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                    className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                   >
                     <option value="all">All Status</option>
                     <option value="pending">Pending</option>
@@ -385,7 +385,7 @@ const LeaveManagement = () => {
           <div className="p-6">
             {loading ? (
               <div className="text-center py-12">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
                 <p className="text-gray-600 mt-4">Loading leaves...</p>
               </div>
             ) : filteredLeaves.length === 0 ? (
@@ -404,7 +404,7 @@ const LeaveManagement = () => {
                 {filteredLeaves.map((leave) => {
                   const StatusIcon = getStatusIcon(leave.status);
                   return (
-                    <div key={leave._id} className="border border-gray-200 rounded-xl p-6 hover:border-green-200 hover:shadow-md transition-all duration-200">
+                    <div key={leave._id} className="border border-gray-200 rounded-xl p-6 hover:border-blue-200 hover:shadow-md transition-all duration-200">
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
                         <div className="flex-1">
                           <div className="flex items-center space-x-3 mb-3">
@@ -441,7 +441,7 @@ const LeaveManagement = () => {
                           <div className="flex space-x-3">
                             <button
                               onClick={() => showConfirmation(leave._id, 'approved')}
-                              className="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm font-medium flex items-center"
+                              className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium flex items-center"
                               disabled={loading}
                             >
                               <CheckCircle className="w-4 h-4 mr-1" />
@@ -464,7 +464,7 @@ const LeaveManagement = () => {
                               setSelectedLeave(leave);
                               setShowModal(true);
                             }}
-                            className="text-green-600 hover:text-green-700 font-medium text-sm flex items-center hover:bg-green-50 px-3 py-2 rounded-lg transition-all duration-200"
+                            className="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center hover:bg-blue-50 px-3 py-2 rounded-lg transition-all duration-200"
                           >
                             <Eye className="w-4 h-4 mr-1" />
                             View Details
@@ -506,7 +506,7 @@ const LeaveManagement = () => {
                 onClick={handleConfirmAction}
                 className={`flex-1 py-2 px-4 rounded-xl transition-colors font-medium text-white ${
                   confirmAction.status === 'approved'
-                    ? 'bg-green-600 hover:bg-green-700'
+                    ? 'bg-blue-600 hover:bg-blue-700'
                     : 'bg-red-600 hover:bg-red-700'
                 }`}
                 disabled={loading}

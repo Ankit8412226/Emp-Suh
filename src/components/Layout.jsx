@@ -43,7 +43,7 @@ const Layout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-white">
+    <div className="min-h-screen bg-gray-50">
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} currentUser={currentUser} />
 
@@ -54,7 +54,7 @@ const Layout = () => {
 
         {/* Top Bar */}
         {!(isMobile && sidebarOpen) && (
-          <header className="bg-white shadow-sm border-b border-green-100 sticky top-0 z-20">
+          <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-20">
             <div className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
               <div className="flex items-center justify-between">
                 {/* Left */}
@@ -79,7 +79,7 @@ const Layout = () => {
                 <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4">
                   {/* Mobile Avatar */}
                   <div className="sm:hidden flex items-center space-x-2">
-                    <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center">
+                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
                       <span className="text-white font-semibold text-xs">
                         {currentUser.name.split(' ').map(n => n[0]).join('')}
                       </span>
@@ -96,7 +96,7 @@ const Layout = () => {
 
                   {/* Desktop User */}
                   <div className="hidden sm:flex items-center space-x-3 bg-gray-50 rounded-lg px-3 py-2">
-                    <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center">
+                    <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
                       <span className="text-white font-semibold text-xs sm:text-sm">
                         {currentUser.name.split(' ').map(n => n[0]).join('')}
                       </span>

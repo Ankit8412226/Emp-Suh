@@ -49,11 +49,11 @@ const Login = () => {
   const isFormValid = formData.email && formData.password;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo/Brand */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
             <Lock className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-gray-800 mb-2">Welcome Back</h1>
@@ -61,7 +61,7 @@ const Login = () => {
         </div>
 
         {/* Login Form */}
-        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl p-8 border border-green-100 space-y-6">
+        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl p-8 border border-gray-200 space-y-6">
           {/* Email */}
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
@@ -75,7 +75,7 @@ const Login = () => {
                 value={formData.email}
                 onChange={handleInputChange}
                 required
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-colors"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
                 placeholder="Enter your email"
               />
             </div>
@@ -94,7 +94,7 @@ const Login = () => {
                 value={formData.password}
                 onChange={handleInputChange}
                 required
-                className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-colors"
+                className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
                 placeholder="Enter your password"
               />
               <button
@@ -117,7 +117,7 @@ const Login = () => {
 
           {/* Success Message */}
           {success && (
-            <div className="text-green-600 bg-green-50 p-3 rounded-lg border border-green-200 text-sm">
+            <div className="text-blue-600 bg-blue-50 p-3 rounded-lg border border-blue-200 text-sm">
               {success}
             </div>
           )}
@@ -128,7 +128,7 @@ const Login = () => {
             disabled={!isFormValid || loading}
             className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-200 ${
               isFormValid && !loading
-                ? 'bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
+                ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
           >

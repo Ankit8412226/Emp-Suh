@@ -81,7 +81,7 @@ const Employees = () => {
 
   // Get leave count color classes
   const getLeaveClasses = (leaveCount) => {
-    if (leaveCount === 0) return 'bg-green-100 text-green-800';
+    if (leaveCount === 0) return 'bg-blue-100 text-blue-800';
     if (leaveCount <= 3) return 'bg-yellow-100 text-yellow-800';
     return 'bg-red-100 text-red-800';
   };
@@ -122,7 +122,7 @@ const Employees = () => {
       </div>
 
       <div className="flex space-x-2 pt-3 border-t border-gray-100">
-        <button className="flex-1 text-green-600 hover:text-green-700 hover:bg-green-50 py-2 px-3 rounded-md transition-colors flex items-center justify-center">
+        <button className="flex-1 text-blue-600 hover:text-blue-700 hover:bg-blue-50 py-2 px-3 rounded-md transition-colors flex items-center justify-center">
           <Eye className="w-4 h-4 mr-1" />
           View
         </button>
@@ -143,14 +143,14 @@ const Employees = () => {
       <div className="px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
           <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Employee Management</h1>
-          <button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center w-full sm:w-auto">
+          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center w-full sm:w-auto">
             <PlusCircle className="w-4 h-4 mr-2" />
             Add Employee
           </button>
         </div>
-        <div className="bg-white rounded-xl shadow-lg border border-green-100 p-8">
+        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
           <div className="flex items-center justify-center">
-            <Loader2 className="w-8 h-8 animate-spin text-green-600" />
+            <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
             <span className="ml-2 text-gray-600">Loading employees...</span>
           </div>
         </div>
@@ -163,7 +163,7 @@ const Employees = () => {
       <div className="px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
           <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Employee Management</h1>
-          <button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center w-full sm:w-auto">
+          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center w-full sm:w-auto">
             <PlusCircle className="w-4 h-4 mr-2" />
             Add Employee
           </button>
@@ -189,7 +189,7 @@ const Employees = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
         <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Employee Management</h1>
-        <button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center w-full sm:w-auto">
+        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center w-full sm:w-auto">
           <PlusCircle className="w-4 h-4 mr-2" />
           Add Employee
         </button>
@@ -222,7 +222,7 @@ const Employees = () => {
       </div>
 
       {/* Main Content */}
-      <div className="bg-white rounded-xl shadow-lg border border-green-100">
+      <div className="bg-white rounded-xl shadow-lg border border-gray-200">
         {/* Search and Filter */}
         <div className="p-4 sm:p-6 border-b border-gray-200">
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
@@ -233,7 +233,7 @@ const Employees = () => {
                 placeholder="Search employees..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none"
+                className="w-full pl-10 pr-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
               />
             </div>
             <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center justify-center sm:justify-start">
@@ -294,7 +294,7 @@ const Employees = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex space-x-2">
                           <button
-                            className="text-green-600 hover:text-green-900 p-1 hover:bg-green-50 rounded"
+                            className="text-blue-600 hover:text-blue-900 p-1 hover:bg-blue-50 rounded"
                             title="View Employee"
                           >
                             <Eye className="w-4 h-4" />
