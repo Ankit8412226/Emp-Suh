@@ -35,7 +35,7 @@ const LeaveManagement = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
 
-  const API_BASE_URL = 'https://erp.suhtech.shop/api/v1';
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://erp.suhtech.shop/api/v1';
 
   // Get current user from localStorage
   useEffect(() => {
