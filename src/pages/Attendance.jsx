@@ -51,7 +51,8 @@ const [isHalfDayLoading, setIsHalfDayLoading] = useState(false);
     baseURL: API_BASE_URL,
     headers: {
       'Content-Type': 'application/json',
-    },
+      'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+    }
   });
 
   // Update current time every second

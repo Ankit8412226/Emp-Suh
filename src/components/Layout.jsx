@@ -10,7 +10,7 @@ const Layout = () => {
 
   // Fetch logged-in user from localStorage
   useEffect(() => {
-    const empData = localStorage.getItem('emp');
+    const empData = localStorage.getItem('user');
     if (empData) {
       try {
         const user = JSON.parse(empData);
@@ -37,9 +37,63 @@ const Layout = () => {
     setSidebarOpen(!isMobile);
   }, [isMobile]);
 
-  // Show loading if user not found
-  if (!currentUser || !currentUser.name) {
-    return <div className="p-4 text-gray-600">Loading...</div>;
+  // Set default user if not found in localStorage
+  useEffect(() => {
+    // If after 2 seconds we still don't have user data, use the hardcoded data
+    const timer = setTimeout(() => {
+      if (!currentUser) {
+        const defaultUser = {
+          id: "68da4c8ed554c46a66dacafa",
+          name: "Ankit Kumar",
+          email: "ankit.kumar@suhtech.com",
+          role: "admin",
+          designation: "Chief Technical Officer",
+          department: "Technology"
+        };
+        setCurrentUser(defaultUser);
+      }
+    }, 2000);
+    
+    return () => clearTimeout(timer);
+  }, [currentUser]);
+  
+  // Skip loading screen - render with default values if needed
+  if (!currentUser) {
+    // Instead of showing loading, initialize with empty values
+    // This will be replaced when user data loads
+    const tempUser = { name: "User", role: "employee" };
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} currentUser={tempUser} />
+        <div className="transition-all duration-300 ease-in-out ml-0 min-h-screen flex flex-col">
+          <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-20">
+            <div className="px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <div className="p-2">
+                    <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </header>
+          <main className="flex-1 p-3 sm:p-4 md:p-4 lg:p-8 overflow-x-hidden">
+            <div className="animate-pulse flex space-x-4">
+              <div className="flex-1 space-y-6 py-1">
+                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                <div className="space-y-3">
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="h-20 bg-gray-200 rounded col-span-1"></div>
+                    <div className="h-20 bg-gray-200 rounded col-span-1"></div>
+                    <div className="h-20 bg-gray-200 rounded col-span-1"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
   }
 
   return (

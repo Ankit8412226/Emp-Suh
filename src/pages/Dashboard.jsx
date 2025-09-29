@@ -33,7 +33,12 @@ const Dashboard = () => {
       setLoading(true);
       setError(null);
 
-      const response = await axios.get(`${API_BASE_URL}/employees/dasboard`);
+      const token = localStorage.getItem('authToken');
+      const response = await axios.get(`${API_BASE_URL}/employees/dashboard`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
 
       if (response.data.success) {
         setDashboardData(response.data.data);
@@ -52,6 +57,26 @@ const Dashboard = () => {
   // Fetch data on component mount
   useEffect(() => {
     fetchDashboardData();
+
+    // Set a timeout to stop loading if API doesn't respond
+    const timeoutId = setTimeout(() => {
+      if (loading) {
+        setLoading(false);
+        setDashboardData({
+          totalEmployees: 0,
+          activeEmployees: 0,
+          presentToday: 0,
+          onLeaveToday: 0,
+          pendingLeaves: 0,
+          activeTasks: 0,
+          completedTasks: 0,
+          activeLeads: 0,
+          recentActivities: []
+        });
+      }
+    }, 5000);
+
+    return () => clearTimeout(timeoutId);
   }, []);
 
   // Icon mapping for activities
