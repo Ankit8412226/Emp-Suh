@@ -58,7 +58,7 @@ const Reports = () => {
     ]
   };
 
-  const StatCard = ({ icon: Icon, title, value, change, color, description }) => (
+  const StatCard = ({ icon, title, value, change, color }) => (
     <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between">
         <div className="flex-1">
@@ -73,12 +73,9 @@ const Reports = () => {
               <span className="text-sm text-gray-500 ml-1">vs last month</span>
             </div>
           )}
-          {description && (
-            <p className="text-xs text-gray-500 mt-1">{description}</p>
-          )}
         </div>
         <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${color}`}>
-          <Icon className="w-6 h-6 text-white" />
+          {icon}
         </div>
       </div>
     </div>

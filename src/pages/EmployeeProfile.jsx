@@ -28,7 +28,7 @@ const EmployeeProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   // Mock employee data
-  const [employee, setEmployee] = useState({
+  const [employee, _setEmployee] = useState({
     id: 'EMP001',
     firstName: 'John',
     lastName: 'Doe',
@@ -80,7 +80,7 @@ const EmployeeProfile = () => {
     { id: 'documents', label: 'Documents', icon: FileText }
   ];
 
-  const StatCard = ({ icon: Icon, title, value, change, color, description }) => (
+  const StatCard = ({ icon: _Icon, title, value, change, color, description }) => (
     <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
       <div className="flex items-center justify-between">
         <div className="flex-1">

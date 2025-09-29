@@ -1,11 +1,18 @@
-
-import { AlertCircle, Eye, EyeOff, Lock, Mail } from 'lucide-react';
+import { AlertCircle, Eye, EyeOff, Lock, Mail, User, Phone, Building } from 'lucide-react';
 import { useState } from 'react';
-import { authAPI } from '../services/api';
 import { Link } from 'react-router-dom';
+import { authAPI } from '../services/api';
 
-const Login = () => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+const Register = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    phone: '',
+    department: '',
+    role: 'employee' // Default role
+  });
+  
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -24,31 +31,25 @@ const Login = () => {
     setSuccess('');
 
     try {
-      const response = await authAPI.login(formData);
+      const response = await authAPI.register(formData);
       
       if (response.data.success) {
-        const { token, data } = response.data;
-        
-        // Store auth token and user data
-        localStorage.setItem('authToken', token || data.token);
-        localStorage.setItem('user', JSON.stringify(data));
-        
-        setSuccess('Login successful! Redirecting...');
+        setSuccess('Registration successful! You can now login.');
         setTimeout(() => {
-          window.location.href = '/dashboard';
-        }, 1500);
+          window.location.href = '/login';
+        }, 2000);
       } else {
-        setError(response.data.message || 'Login failed. Please try again.');
+        setError(response.data.message || 'Registration failed. Please try again.');
       }
     } catch (err) {
-      const errorMessage = err.response?.data?.message || 'Login failed. Please try again.';
+      const errorMessage = err.response?.data?.message || 'Registration failed. Please try again.';
       setError(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
-  const isFormValid = formData.email && formData.password;
+  const isFormValid = formData.name && formData.email && formData.password && formData.phone;
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -56,14 +57,33 @@ const Login = () => {
         {/* Logo/Brand */}
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Lock className="w-8 h-8 text-white" />
+            <User className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Welcome Back</h1>
-          <p className="text-gray-600">Please sign in to your account</p>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">Create Account</h1>
+          <p className="text-gray-600">Register to access the employee management system</p>
         </div>
 
-        {/* Login Form */}
-        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl p-8 border border-gray-200 space-y-6">
+        {/* Registration Form */}
+        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl p-8 border border-gray-200 space-y-5">
+          {/* Full Name */}
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+              Full Name
+            </label>
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                placeholder="Enter your full name"
+              />
+            </div>
+          </div>
+
           {/* Email */}
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
@@ -83,6 +103,43 @@ const Login = () => {
             </div>
           </div>
 
+          {/* Phone */}
+          <div>
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+              Phone Number
+            </label>
+            <div className="relative">
+              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleInputChange}
+                required
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                placeholder="Enter your phone number"
+              />
+            </div>
+          </div>
+
+          {/* Department */}
+          <div>
+            <label htmlFor="department" className="block text-sm font-medium text-gray-700 mb-2">
+              Department
+            </label>
+            <div className="relative">
+              <Building className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                name="department"
+                value={formData.department}
+                onChange={handleInputChange}
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                placeholder="Enter your department"
+              />
+            </div>
+          </div>
+
           {/* Password */}
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
@@ -97,7 +154,7 @@ const Login = () => {
                 onChange={handleInputChange}
                 required
                 className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
-                placeholder="Enter your password"
+                placeholder="Create a password"
               />
               <button
                 type="button"
@@ -107,13 +164,6 @@ const Login = () => {
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
-          </div>
-
-          {/* Forgot Password Link */}
-          <div className="flex justify-end">
-            <a href="#" className="text-sm text-blue-600 hover:text-blue-800 hover:underline">
-              Forgot password?
-            </a>
           </div>
 
           {/* Error Message */}
@@ -142,26 +192,22 @@ const Login = () => {
                 : 'bg-blue-300 cursor-not-allowed'
             }`}
           >
-            {loading ? (
-              <div className="flex items-center justify-center space-x-2">
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                <span>Signing In...</span>
-              </div>
-            ) : (
-              'Sign In'
-            )}
+            {loading ? 'Registering...' : 'Register'}
           </button>
+
+          {/* Login Link */}
+          <div className="text-center mt-4">
+            <p className="text-gray-600">
+              Already have an account?{' '}
+              <Link to="/login" className="text-blue-600 hover:text-blue-800 hover:underline">
+                Sign in
+              </Link>
+            </p>
+          </div>
         </form>
-        
-        {/* Footer */}
-        <div className="text-center mt-6">
-          <p className="text-sm text-gray-500">
-            Secure login powered by encrypted authentication
-          </p>
-        </div>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default Register;

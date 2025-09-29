@@ -9,13 +9,14 @@ import {
   Trash2
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { employeeAPI } from '../services/api';
 
 const Employees = () => {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [isMobile, setIsMobile] = useState(false);
+  const [_isMobile, setIsMobile] = useState(false);
 
   // Check if mobile view
   useEffect(() => {
@@ -33,14 +34,8 @@ const Employees = () => {
     const fetchEmployees = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/employees`);
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        setEmployees(data.employees || data); // Handle different response structures
+        const response = await employeeAPI.getAllEmployees();
+        setEmployees(response.data.data || []);
         setError(null);
       } catch (err) {
         console.error('Error fetching employees:', err);
