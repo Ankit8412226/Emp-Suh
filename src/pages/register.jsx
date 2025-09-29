@@ -1,4 +1,4 @@
-import { AlertCircle, Eye, EyeOff, Lock, Mail, User, Phone, Building } from 'lucide-react';
+import { AlertCircle, Eye, EyeOff, Lock, Mail, User, Phone, Building, Briefcase } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { authAPI } from '../services/api';
@@ -8,8 +8,9 @@ const Register = () => {
     name: '',
     email: '',
     password: '',
-    phone: '',
+    mobileNumber: '',
     department: '',
+    designation: '',
     role: 'employee' // Default role
   });
   
@@ -49,7 +50,7 @@ const Register = () => {
     }
   };
 
-  const isFormValid = formData.name && formData.email && formData.password && formData.phone;
+  const isFormValid = formData.name && formData.email && formData.password && formData.mobileNumber;
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -105,15 +106,15 @@ const Register = () => {
 
           {/* Phone */}
           <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="mobileNumber" className="block text-sm font-medium text-gray-700 mb-2">
               Phone Number
             </label>
             <div className="relative">
               <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="tel"
-                name="phone"
-                value={formData.phone}
+                name="mobileNumber"
+                value={formData.mobileNumber}
                 onChange={handleInputChange}
                 required
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
@@ -136,6 +137,24 @@ const Register = () => {
                 onChange={handleInputChange}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
                 placeholder="Enter your department"
+              />
+            </div>
+          </div>
+          
+          {/* Designation */}
+          <div>
+            <label htmlFor="designation" className="block text-sm font-medium text-gray-700 mb-2">
+              Designation
+            </label>
+            <div className="relative">
+              <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                name="designation"
+                value={formData.designation}
+                onChange={handleInputChange}
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                placeholder="Enter your designation"
               />
             </div>
           </div>
