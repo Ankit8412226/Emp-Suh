@@ -56,7 +56,7 @@ export const employeeAPI = {
 // Attendance API
 export const attendanceAPI = {
   markAttendance: (attendanceData) => api.post('/attendance', attendanceData),
-  getEmployeeAttendance: (employeeId, month, year) => 
+  getEmployeeAttendance: (employeeId, month, year) =>
     api.get(`/attendance/employee/${employeeId}`, { params: { month, year } }),
   getAllAttendance: (month, year) => api.get('/attendance', { params: { month, year } }),
 };
@@ -64,7 +64,7 @@ export const attendanceAPI = {
 // Leave API
 export const leaveAPI = {
   applyLeave: (leaveData) => api.post('/leaves', leaveData),
-  getEmployeeLeaves: (employeeId, status) => 
+  getEmployeeLeaves: (employeeId, status) =>
     api.get(`/leaves/employee/${employeeId}`, { params: { status } }),
   getAllLeaves: (status) => api.get('/leaves', { params: { status } }),
   updateLeaveStatus: (id, statusData) => api.put(`/leaves/${id}/status`, statusData),
@@ -74,7 +74,7 @@ export const leaveAPI = {
 export const taskAPI = {
   createTask: (taskData) => api.post('/tasks', taskData),
   getAllTasks: (filters) => api.get('/tasks', { params: filters }),
-  getEmployeeTasks: (employeeId, status) => 
+  getEmployeeTasks: (employeeId, status) =>
     api.get(`/tasks/employee/${employeeId}`, { params: { status } }),
   getTaskById: (id) => api.get(`/tasks/${id}`),
   updateTask: (id, taskData) => api.put(`/tasks/${id}`, taskData),
@@ -88,7 +88,7 @@ export const taskAPI = {
 export const leadAPI = {
   createLead: (leadData) => api.post('/leads', leadData),
   getAllLeads: (filters) => api.get('/leads', { params: filters }),
-  getEmployeeLeads: (employeeId, filters) => 
+  getEmployeeLeads: (employeeId, filters) =>
     api.get(`/leads/employee/${employeeId}`, { params: filters }),
   getLeadById: (id) => api.get(`/leads/${id}`),
   updateLead: (id, leadData) => api.put(`/leads/${id}`, leadData),
@@ -101,11 +101,13 @@ export const leadAPI = {
 // Salary API
 export const salaryAPI = {
   createSalary: (salaryData) => api.post('/salaries', salaryData),
-  getAllSalaries: (month, year) => api.get('/salaries', { params: { month, year } }),
-  getEmployeeSalary: (employeeId, month, year) => 
+  getAllSalaries: ({ month, year } = {}) => api.get('/salaries', { params: { month, year } }),
+  getEmployeeSalary: (employeeId, { month, year } = {}) =>
     api.get(`/salaries/employee/${employeeId}`, { params: { month, year } }),
   updateSalary: (id, salaryData) => api.put(`/salaries/${id}`, salaryData),
   deleteSalary: (id) => api.delete(`/salaries/${id}`),
+  computeFromAttendance: (payload) => api.post('/salaries/compute', payload),
+  downloadPayslip: (id) => api.get(`/salaries/${id}/payslip`, { responseType: 'blob' })
 };
 
 export default api;

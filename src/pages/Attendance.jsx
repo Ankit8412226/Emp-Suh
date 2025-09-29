@@ -25,16 +25,33 @@ const AttendancePage = () => {
 
   // Employee data from localStorage
   const [employee, setEmployee] = useState(null);
+  const [salary, setSalary] = useState(null);
   const [isFullDayLoading, setIsFullDayLoading] = useState(false);
-const [isHalfDayLoading, setIsHalfDayLoading] = useState(false);
+  const [isHalfDayLoading, setIsHalfDayLoading] = useState(false);
 
 
-  // Get employee data from localStorage on component mount
+  // Get employee data from localStorage on component mount and fetch salary
   useEffect(() => {
     try {
       const empData = JSON.parse(localStorage.getItem('emp'));
       if (empData) {
         setEmployee(empData);
+        
+        // Fetch salary information
+        const token = localStorage.getItem('authToken');
+        axios.get(`${API_BASE_URL}/employees/salary/${empData.id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+        .then(response => {
+          if (response.data.success) {
+            setSalary(response.data.data);
+          }
+        })
+        .catch(err => {
+          console.error("Error fetching salary data:", err);
+        });
       } else {
         setError('Employee data not found. Please login again.');
       }
@@ -221,6 +238,19 @@ const [isHalfDayLoading, setIsHalfDayLoading] = useState(false);
             <p className="text-xl font-bold text-slate-800">{formatTime(currentTime)}</p>
           </div>
         </div>
+        
+        {/* Salary Information */}
+        {salary && (
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
+            <h3 className="text-lg font-semibold text-slate-800 mb-2">Salary Information</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <p className="text-sm"><span className="text-slate-600">Base Salary:</span> <span className="font-semibold text-slate-800">${salary.baseSalary}</span></p>
+              <p className="text-sm"><span className="text-slate-600">Allowances:</span> <span className="font-semibold text-slate-800">${salary.allowances || 0}</span></p>
+              <p className="text-sm"><span className="text-slate-600">Deductions:</span> <span className="font-semibold text-slate-800">${salary.deductions || 0}</span></p>
+              <p className="text-sm"><span className="text-slate-600">Net Salary:</span> <span className="font-semibold text-slate-800">${salary.netSalary || salary.baseSalary}</span></p>
+            </div>
+          </div>
+        )}
 
         {/* Error/Success Messages */}
         {error && (

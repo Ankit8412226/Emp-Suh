@@ -18,7 +18,9 @@ import {
   User,
   X
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
 const Announcements = () => {
   const [activeTab, setActiveTab] = useState('all');
@@ -26,94 +28,9 @@ const Announcements = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  // Mock announcements data
-  const [announcements, setAnnouncements] = useState([
-    {
-      id: 1,
-      title: 'Company Holiday Schedule 2024',
-      content: 'We are pleased to announce the official holiday schedule for 2024. Please review the attached calendar and plan your time off accordingly. All employees are entitled to 15 paid holidays throughout the year.',
-      author: 'HR Department',
-      authorAvatar: 'HR',
-      category: 'company',
-      priority: 'high',
-      isPinned: true,
-      createdAt: '2024-01-15T10:00:00Z',
-      expiresAt: '2024-12-31T23:59:59Z',
-      readBy: 45,
-      totalEmployees: 50,
-      likes: 12,
-      comments: 3,
-      attachments: ['holiday-calendar-2024.pdf']
-    },
-    {
-      id: 2,
-      title: 'New Employee Onboarding Program',
-      content: 'We have launched a comprehensive onboarding program for new employees. This program includes orientation sessions, mentorship assignments, and structured learning paths to help new team members integrate smoothly.',
-      author: 'Sarah Wilson',
-      authorAvatar: 'SW',
-      category: 'hr',
-      priority: 'medium',
-      isPinned: false,
-      createdAt: '2024-01-14T14:30:00Z',
-      expiresAt: '2024-02-14T23:59:59Z',
-      readBy: 38,
-      totalEmployees: 50,
-      likes: 8,
-      comments: 5,
-      attachments: ['onboarding-guide.pdf', 'mentorship-program.docx']
-    },
-    {
-      id: 3,
-      title: 'Office Renovation Update',
-      content: 'The office renovation is progressing well. The new conference rooms will be available starting next week. Please note that the main entrance will be temporarily relocated to the side entrance during the final phase.',
-      author: 'Mike Johnson',
-      authorAvatar: 'MJ',
-      category: 'facilities',
-      priority: 'medium',
-      isPinned: false,
-      createdAt: '2024-01-13T09:15:00Z',
-      expiresAt: '2024-01-20T23:59:59Z',
-      readBy: 42,
-      totalEmployees: 50,
-      likes: 6,
-      comments: 2,
-      attachments: []
-    },
-    {
-      id: 4,
-      title: 'Monthly Team Building Event',
-      content: 'Join us for our monthly team building event this Friday at 3 PM. We will have pizza, games, and team activities. This is a great opportunity to connect with colleagues and have some fun!',
-      author: 'Lisa Chen',
-      authorAvatar: 'LC',
-      category: 'events',
-      priority: 'low',
-      isPinned: false,
-      createdAt: '2024-01-12T16:45:00Z',
-      expiresAt: '2024-01-19T18:00:00Z',
-      readBy: 35,
-      totalEmployees: 50,
-      likes: 15,
-      comments: 8,
-      attachments: []
-    },
-    {
-      id: 5,
-      title: 'IT Security Awareness Training',
-      content: 'All employees are required to complete the IT Security Awareness Training by the end of this month. This training covers best practices for password management, phishing prevention, and data protection.',
-      author: 'IT Department',
-      authorAvatar: 'IT',
-      category: 'training',
-      priority: 'high',
-      isPinned: true,
-      createdAt: '2024-01-11T11:20:00Z',
-      expiresAt: '2024-01-31T23:59:59Z',
-      readBy: 28,
-      totalEmployees: 50,
-      likes: 4,
-      comments: 1,
-      attachments: ['security-training-module.pdf']
-    }
-  ]);
+  const [announcements, setAnnouncements] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const [newAnnouncement, setNewAnnouncement] = useState({
     title: '',
@@ -179,31 +96,51 @@ const Announcements = () => {
     return matchesSearch && matchesCategory && matchesTab;
   });
 
-  const handleCreateAnnouncement = () => {
-    const announcement = {
-      id: announcements.length + 1,
-      ...newAnnouncement,
-      author: 'Current User',
-      authorAvatar: 'CU',
-      isPinned: false,
-      createdAt: new Date().toISOString(),
-      readBy: 0,
-      totalEmployees: 50,
-      likes: 0,
-      comments: 0,
-      attachments: newAnnouncement.attachments
-    };
+  const fetchAnnouncements = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('authToken');
+      const res = await fetch(`${API_BASE_URL}/announcements`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (data.success) {
+        setAnnouncements(data.data);
+        setError('');
+      } else {
+        setError(data.message || 'Failed to load announcements');
+      }
+    } catch (e) {
+      setError(e.message || 'Failed to load announcements');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    setAnnouncements([announcement, ...announcements]);
-    setNewAnnouncement({
-      title: '',
-      content: '',
-      category: 'company',
-      priority: 'medium',
-      expiresAt: '',
-      attachments: []
-    });
-    setShowCreateModal(false);
+  useEffect(() => { fetchAnnouncements(); }, []);
+
+  const handleCreateAnnouncement = async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      const res = await fetch(`${API_BASE_URL}/announcements`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newAnnouncement)
+      });
+      const data = await res.json();
+      if (data.success) {
+        setShowCreateModal(false);
+        setNewAnnouncement({ title:'', content:'', category:'company', priority:'medium', expiresAt:'', attachments:[] });
+        fetchAnnouncements();
+      } else {
+        alert(data.message || 'Failed to create');
+      }
+    } catch (e) {
+      alert(e.message || 'Failed to create');
+    }
   };
 
   const AnnouncementCard = ({ announcement }) => {
@@ -466,7 +403,13 @@ const Announcements = () => {
 
       {/* Announcements List */}
       <div className="space-y-4">
-        {filteredAnnouncements.length === 0 ? (
+        {loading ? (
+          <div className="bg-white rounded-xl p-12 border border-gray-200 shadow-sm text-center">
+            <Megaphone className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Loading...</h3>
+            <p className="text-gray-600">Fetching announcements</p>
+          </div>
+        ) : filteredAnnouncements.length === 0 ? (
           <div className="bg-white rounded-xl p-12 border border-gray-200 shadow-sm text-center">
             <Megaphone className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-900 mb-2">No announcements found</h3>

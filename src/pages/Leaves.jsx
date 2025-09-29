@@ -99,7 +99,7 @@ const LeaveManagement = () => {
         reason: formData.reason
       };
 
-      const response = await fetch(`${API_BASE_URL}/leaves/apply`, {
+      const response = await fetch(`${API_BASE_URL}/leaves`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -130,7 +130,7 @@ const LeaveManagement = () => {
       setLoading(true);
       const token = localStorage.getItem('authToken'); // Fixed: was 'token', should be 'authToken'
 
-      const response = await fetch(`${API_BASE_URL}/leaves/status/${leaveId}`, {
+      const response = await fetch(`${API_BASE_URL}/leaves/${leaveId}/status`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

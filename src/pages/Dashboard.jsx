@@ -63,14 +63,31 @@ const Dashboard = () => {
       if (loading) {
         setLoading(false);
         setDashboardData({
-          totalEmployees: 0,
-          activeEmployees: 0,
-          presentToday: 0,
-          onLeaveToday: 0,
-          pendingLeaves: 0,
-          activeTasks: 0,
-          completedTasks: 0,
-          activeLeads: 0,
+          employeeStats: { 
+            total: 0, 
+            active: 0, 
+            onLeave: 0, 
+            availabilityRate: 0 
+          }, 
+          attendanceStats: { 
+            today: 0, 
+            rate: "0.00" 
+          }, 
+          taskStats: { 
+            total: 0, 
+            completed: 0, 
+            pending: 0, 
+            completionRate: "0.00" 
+          }, 
+          leadStats: { 
+            total: 0, 
+            new: 0, 
+            converted: 0, 
+            conversionRate: "0.00" 
+          }, 
+          leaveStats: { 
+            pending: 0 
+          },
           recentActivities: []
         });
       }
@@ -205,7 +222,7 @@ const Dashboard = () => {
   }
 
   // Main dashboard render
-  const { dashboardStats, trends, recentActivities, analytics } = dashboardData;
+  const { employeeStats, attendanceStats, taskStats, leadStats, leaveStats, recentActivities } = dashboardData;
 
   return (
     <div className="sm:space-y-6 lg:space-y-8 max-w-7xl mx-auto">
@@ -248,33 +265,33 @@ const Dashboard = () => {
         <StatCard
           icon={Users}
           title="Total Employees"
-          value={dashboardStats.totalEmployees}
+          value={employeeStats?.total || 0}
           color="bg-gradient-to-r from-blue-500 to-blue-600"
-          trend={trends?.totalEmployees}
-          description="Active workforce"
+          trend={employeeStats?.availabilityRate}
+          description={`${employeeStats?.active || 0} active`}
         />
         <StatCard
           icon={CheckCircle}
-          title="Present Today"
-          value={dashboardStats.presentToday}
+          title="Attendance Today"
+          value={attendanceStats?.today || 0}
           color="bg-gradient-to-r from-green-500 to-green-600"
-          trend={trends?.presentToday}
-          description="Currently online"
+          trend={parseFloat(attendanceStats?.rate || 0)}
+          description="Present today"
         />
         <StatCard
           icon={Calendar}
           title="On Leave"
-          value={dashboardStats.onLeave}
+          value={employeeStats?.onLeave || 0}
           color="bg-gradient-to-r from-yellow-500 to-yellow-600"
-          description="Away today"
+          description={`${leaveStats?.pending || 0} pending requests`}
         />
         <StatCard
           icon={AlertTriangle}
-          title="Pending Tasks"
-          value={dashboardStats.pendingTasks}
+          title="Tasks"
+          value={taskStats?.total || 0}
           color="bg-gradient-to-r from-red-500 to-red-600"
-          trend={trends?.pendingTasks}
-          description="Requires attention"
+          trend={parseFloat(taskStats?.completionRate || 0)}
+          description={`${taskStats?.completed || 0} completed, ${taskStats?.pending || 0} pending`}
         />
       </div>
 

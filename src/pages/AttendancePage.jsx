@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
 import { Calendar, ChevronLeft, ChevronRight, Clock, Loader2, UserCheck } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { attendanceAPI } from '../services/api';
 
 const AttendancePage = () => {
@@ -23,18 +23,18 @@ const AttendancePage = () => {
     try {
       setLoading(true);
       const user = JSON.parse(localStorage.getItem('user'));
-      
+
       if (!user) {
         window.location.href = '/login';
         return;
       }
-      
+
       const response = await attendanceAPI.getEmployeeAttendance(
-        user._id, 
+        user._id,
         currentMonth + 1, // API expects 1-12 for months
         currentYear
       );
-      
+
       if (response.data.success) {
         setAttendanceData(response.data.data || []);
       } else {
@@ -52,10 +52,9 @@ const AttendancePage = () => {
     try {
       setMarkingAttendance(true);
       const response = await attendanceAPI.markAttendance({
-        status: 'present',
-        date: new Date().toISOString()
+        attendanceType: 'full'
       });
-      
+
       if (response.data.success) {
         // Refresh attendance data
         fetchAttendanceData();
@@ -102,19 +101,19 @@ const AttendancePage = () => {
   const getAttendanceStatus = (day) => {
     const attendance = attendanceData.find(a => {
       const attendanceDate = new Date(a.date);
-      return attendanceDate.getDate() === day && 
-             attendanceDate.getMonth() === currentMonth && 
+      return attendanceDate.getDate() === day &&
+             attendanceDate.getMonth() === currentMonth &&
              attendanceDate.getFullYear() === currentYear;
     });
-    
+
     return attendance ? attendance.status : null;
   };
 
   // Check if today
   const isToday = (day) => {
     const today = new Date();
-    return day === today.getDate() && 
-           currentMonth === today.getMonth() && 
+    return day === today.getDate() &&
+           currentMonth === today.getMonth() &&
            currentYear === today.getFullYear();
   };
 
@@ -123,20 +122,20 @@ const AttendancePage = () => {
     const daysInMonth = getDaysInMonth(currentMonth, currentYear);
     const firstDay = getFirstDayOfMonth(currentMonth, currentYear);
     const calendar = [];
-    
+
     // Add empty cells for days before the first day of the month
     for (let i = 0; i < firstDay; i++) {
       calendar.push(<div key={`empty-${i}`} className="h-12 border border-gray-100"></div>);
     }
-    
+
     // Add cells for each day of the month
     for (let day = 1; day <= daysInMonth; day++) {
       const status = getAttendanceStatus(day);
       const today = isToday(day);
-      
+
       let statusClass = '';
       let statusText = '';
-      
+
       if (status === 'present') {
         statusClass = 'bg-green-100 text-green-800 border-green-200';
         statusText = 'Present';
@@ -150,10 +149,10 @@ const AttendancePage = () => {
         statusClass = 'bg-blue-100 text-blue-800 border-blue-200';
         statusText = 'Leave';
       }
-      
+
       calendar.push(
-        <div 
-          key={day} 
+        <div
+          key={day}
           className={`h-24 border border-gray-200 p-2 ${today ? 'bg-blue-50' : ''} ${statusClass}`}
         >
           <div className="flex justify-between">
@@ -163,7 +162,7 @@ const AttendancePage = () => {
         </div>
       );
     }
-    
+
     return calendar;
   };
 
@@ -192,9 +191,9 @@ const AttendancePage = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
         <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Attendance</h1>
-        
+
         {!isTodayMarked() && (
-          <button 
+          <button
             onClick={markAttendance}
             disabled={markingAttendance}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center w-full sm:w-auto"
@@ -224,21 +223,21 @@ const AttendancePage = () => {
       {/* Month Navigation */}
       <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 sm:p-6 mb-6">
         <div className="flex justify-between items-center mb-4">
-          <button 
+          <button
             onClick={previousMonth}
             className="p-2 rounded-full hover:bg-gray-100"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
-          
+
           <div className="flex items-center">
             <Calendar className="w-5 h-5 mr-2 text-blue-600" />
             <h2 className="text-lg font-medium">
               {monthNames[currentMonth]} {currentYear}
             </h2>
           </div>
-          
-          <button 
+
+          <button
             onClick={nextMonth}
             className="p-2 rounded-full hover:bg-gray-100"
           >
@@ -254,7 +253,7 @@ const AttendancePage = () => {
               {day}
             </div>
           ))}
-          
+
           {/* Calendar days */}
           {generateCalendar()}
         </div>
@@ -266,7 +265,7 @@ const AttendancePage = () => {
           <Clock className="w-5 h-5 mr-2 text-blue-600" />
           Monthly Summary
         </h3>
-        
+
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div className="bg-green-50 border border-green-100 rounded-lg p-4">
             <div className="text-sm text-gray-500">Present</div>
@@ -274,21 +273,21 @@ const AttendancePage = () => {
               {attendanceData.filter(a => a.status === 'present').length}
             </div>
           </div>
-          
+
           <div className="bg-red-50 border border-red-100 rounded-lg p-4">
             <div className="text-sm text-gray-500">Absent</div>
             <div className="text-2xl font-bold text-red-700">
               {attendanceData.filter(a => a.status === 'absent').length}
             </div>
           </div>
-          
+
           <div className="bg-yellow-50 border border-yellow-100 rounded-lg p-4">
             <div className="text-sm text-gray-500">Half Day</div>
             <div className="text-2xl font-bold text-yellow-700">
               {attendanceData.filter(a => a.status === 'half-day').length}
             </div>
           </div>
-          
+
           <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
             <div className="text-sm text-gray-500">Leave</div>
             <div className="text-2xl font-bold text-blue-700">

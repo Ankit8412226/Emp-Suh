@@ -1,23 +1,20 @@
 import {
-  BarChart3,
-  Calendar,
-  Download,
-  Filter,
-  TrendingUp,
-  Users,
-  Clock,
-  CheckCircle,
-  AlertTriangle,
-  PieChart,
-  Activity,
-  Target,
-  Award,
-  Briefcase,
-  DollarSign,
-  FileText,
-  RefreshCw
+    Activity,
+    Award,
+    Briefcase,
+    Calendar,
+    CheckCircle,
+    Clock,
+    Download,
+    FileText,
+    RefreshCw,
+    Target,
+    TrendingUp,
+    Users
 } from 'lucide-react';
 import { useState } from 'react';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
 const Reports = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('month');
@@ -100,7 +97,7 @@ const Reports = () => {
           <div className="w-20 text-sm text-gray-600 truncate">{labels[index]}</div>
           <div className="flex-1 mx-3">
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div 
+              <div
                 className={`h-2 rounded-full ${color}`}
                 style={{ width: `${(value / Math.max(...data)) * 100}%` }}
               ></div>
@@ -147,13 +144,27 @@ const Reports = () => {
     );
   };
 
-  const handleExport = (format) => {
-    setLoading(true);
-    // Simulate export process
-    setTimeout(() => {
+  const handleExport = async (entity, format) => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('authToken');
+      const res = await fetch(`${API_BASE_URL}/export/${entity}?format=${format}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error('Export failed');
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `${entity}.${format === 'json' ? 'json' : 'csv'}`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (e) {
+      alert(e.message || 'Export failed');
+    } finally {
       setLoading(false);
-      alert(`Report exported as ${format.toUpperCase()}`);
-    }, 2000);
+    }
   };
 
   return (
@@ -189,7 +200,7 @@ const Reports = () => {
             <option value="operations">Operations</option>
           </select>
           <button
-            onClick={() => handleExport('pdf')}
+            onClick={() => handleExport('employees', 'csv')}
             disabled={loading}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center disabled:opacity-50"
           >
@@ -198,7 +209,31 @@ const Reports = () => {
             ) : (
               <Download className="w-4 h-4 mr-2" />
             )}
-            Export PDF
+            Export Employees CSV
+          </button>
+          <button
+            onClick={() => handleExport('attendance', 'csv')}
+            disabled={loading}
+            className="bg-gray-100 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center disabled:opacity-50"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Export Attendance CSV
+          </button>
+          <button
+            onClick={() => handleExport('leads', 'csv')}
+            disabled={loading}
+            className="bg-gray-100 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center disabled:opacity-50"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Export Leads CSV
+          </button>
+          <button
+            onClick={() => handleExport('salaries', 'csv')}
+            disabled={loading}
+            className="bg-gray-100 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center disabled:opacity-50"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Export Salaries CSV
           </button>
         </div>
       </div>
