@@ -1,17 +1,17 @@
 import axios from "axios";
 import {
-  Activity,
-  AlertTriangle,
-  BarChart2,
-  Calendar,
-  CheckCircle,
-  CheckSquare,
-  Clock,
-  RefreshCw,
-  TrendingDown,
-  TrendingUp,
-  UserPlus,
-  Users,
+    Activity,
+    AlertTriangle,
+    BarChart2,
+    Calendar,
+    CheckCircle,
+    CheckSquare,
+    Clock,
+    RefreshCw,
+    TrendingDown,
+    TrendingUp,
+    UserPlus,
+    Users,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -63,30 +63,30 @@ const Dashboard = () => {
       if (loading) {
         setLoading(false);
         setDashboardData({
-          employeeStats: { 
-            total: 0, 
-            active: 0, 
-            onLeave: 0, 
-            availabilityRate: 0 
-          }, 
-          attendanceStats: { 
-            today: 0, 
-            rate: "0.00" 
-          }, 
-          taskStats: { 
-            total: 0, 
-            completed: 0, 
-            pending: 0, 
-            completionRate: "0.00" 
-          }, 
-          leadStats: { 
-            total: 0, 
-            new: 0, 
-            converted: 0, 
-            conversionRate: "0.00" 
-          }, 
-          leaveStats: { 
-            pending: 0 
+          employeeStats: {
+            total: 0,
+            active: 0,
+            onLeave: 0,
+            availabilityRate: 0
+          },
+          attendanceStats: {
+            today: 0,
+            rate: "0.00"
+          },
+          taskStats: {
+            total: 0,
+            completed: 0,
+            pending: 0,
+            completionRate: "0.00"
+          },
+          leadStats: {
+            total: 0,
+            new: 0,
+            converted: 0,
+            conversionRate: "0.00"
+          },
+          leaveStats: {
+            pending: 0
           },
           recentActivities: []
         });
@@ -381,14 +381,12 @@ const Dashboard = () => {
             <div>
               <p className="text-gray-600 text-sm font-medium">New Leads</p>
               <p className="text-2xl sm:text-3xl font-bold text-gray-800 mt-1">
-                {dashboardStats.newLeads}
+                {leadStats?.new || 0}
               </p>
               <div className="flex items-center mt-2">
                 <div className="w-2 h-2 bg-orange-500 rounded-full mr-2"></div>
                 <span className="text-orange-600 text-sm">
-                  This week{" "}
-                  {trends?.newLeads &&
-                    `(${trends.newLeads >= 0 ? "+" : ""}${trends.newLeads}%)`}
+                  This week
                 </span>
               </div>
             </div>
@@ -403,7 +401,7 @@ const Dashboard = () => {
                 Pending Leaves
               </p>
               <p className="text-2xl sm:text-3xl font-bold text-gray-800 mt-1">
-                {dashboardStats.pendingLeaves}
+                {leaveStats?.pending || 0}
               </p>
               <div className="flex items-center mt-2">
                 <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
@@ -421,7 +419,7 @@ const Dashboard = () => {
                 Attendance Rate
               </p>
               <p className="text-2xl sm:text-3xl font-bold text-gray-800 mt-1">
-                {dashboardStats.attendanceRate || analytics?.attendance?.rate}%
+                {attendanceStats?.rate || 0}%
               </p>
               <div className="flex items-center mt-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
@@ -433,122 +431,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Analytics Section (if available) */}
-      {analytics && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          {analytics.tasks && (
-            <div className="bg-white rounded-2xl p-4 sm:p-5 lg:p-6 border border-gray-100">
-              <h4 className="text-lg font-semibold text-gray-800 mb-3">
-                Task Analytics
-              </h4>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Completed:</span>
-                  <span className="text-sm font-semibold text-green-600">
-                    {analytics.tasks.completed}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">In Progress:</span>
-                  <span className="text-sm font-semibold text-blue-600">
-                    {analytics.tasks.inProgress}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Pending:</span>
-                  <span className="text-sm font-semibold text-red-600">
-                    {analytics.tasks.pending}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {analytics.leads && (
-            <div className="bg-white rounded-2xl p-4 sm:p-5 lg:p-6 border border-gray-100">
-              <h4 className="text-lg font-semibold text-gray-800 mb-3">
-                Lead Analytics
-              </h4>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">New:</span>
-                  <span className="text-sm font-semibold text-blue-600">
-                    {analytics.leads.new}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Interested:</span>
-                  <span className="text-sm font-semibold text-yellow-600">
-                    {analytics.leads.interested}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Converted:</span>
-                  <span className="text-sm font-semibold text-green-600">
-                    {analytics.leads.converted}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {analytics.leaves && (
-            <div className="bg-white rounded-2xl p-4 sm:p-5 lg:p-6 border border-gray-100">
-              <h4 className="text-lg font-semibold text-gray-800 mb-3">
-                Leave Analytics
-              </h4>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Pending:</span>
-                  <span className="text-sm font-semibold text-yellow-600">
-                    {analytics.leaves.pending}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Approved:</span>
-                  <span className="text-sm font-semibold text-green-600">
-                    {analytics.leaves.approved}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Rejected:</span>
-                  <span className="text-sm font-semibold text-red-600">
-                    {analytics.leaves.rejected}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {analytics.attendance && (
-            <div className="bg-white rounded-2xl p-4 sm:p-5 lg:p-6 border border-gray-100">
-              <h4 className="text-lg font-semibold text-gray-800 mb-3">
-                Attendance Analytics
-              </h4>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Present:</span>
-                  <span className="text-sm font-semibold text-green-600">
-                    {analytics.attendance.present}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Absent:</span>
-                  <span className="text-sm font-semibold text-red-600">
-                    {analytics.attendance.absent}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">On Leave:</span>
-                  <span className="text-sm font-semibold text-yellow-600">
-                    {analytics.attendance.onLeave}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 };
