@@ -17,7 +17,7 @@ const AttendancePage = () => {
   const [attendanceStatus, setAttendanceStatus] = useState(null); // null, 'checked-in', 'checked-out'
   const [checkInTime, setCheckInTime] = useState(null);
   const [checkOutTime, setCheckOutTime] = useState(null);
-  const [location, setLocation] = useState('Office - Main Building');
+  const [location] = useState('Office - Main Building');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -25,7 +25,7 @@ const AttendancePage = () => {
 
   // Employee data from localStorage
   const [employee, setEmployee] = useState(null);
-  const [salary, setSalary] = useState(null);
+  const [salary] = useState(null);
   const [isFullDayLoading, setIsFullDayLoading] = useState(false);
   const [isHalfDayLoading, setIsHalfDayLoading] = useState(false);
 
@@ -33,29 +33,13 @@ const AttendancePage = () => {
   // Get employee data from localStorage on component mount and fetch salary
   useEffect(() => {
     try {
-      const empData = JSON.parse(localStorage.getItem('emp'));
-      if (empData) {
-        setEmployee(empData);
-        
-        // Fetch salary information
-        const token = localStorage.getItem('authToken');
-        axios.get(`${API_BASE_URL}/employees/salary/${empData.id}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        })
-        .then(response => {
-          if (response.data.success) {
-            setSalary(response.data.data);
-          }
-        })
-        .catch(err => {
-          console.error("Error fetching salary data:", err);
-        });
+      const userData = JSON.parse(localStorage.getItem('user'));
+      if (userData) {
+        setEmployee(userData);
       } else {
         setError('Employee data not found. Please login again.');
       }
-    } catch (err) {
+    } catch {
       setError('Invalid employee data. Please login again.');
     }
   }, []);
@@ -116,8 +100,9 @@ const AttendancePage = () => {
     setSuccess('');
 
     try {
-      const response = await api.post('/attendance/checkin', {
-        employeeId: employee?._id || employee?.id
+      const response = await api.post('/attendance', {
+        employeeId: employee?.id || employee?._id,
+        attendanceType: 'full'
       });
 
       if (response.status === 200) {
@@ -140,8 +125,9 @@ const AttendancePage = () => {
     setSuccess('');
 
     try {
-      const response = await api.post('/attendance/halfday-checkin', {
-        employeeId: employee?._id || employee?.id
+      const response = await api.post('/attendance', {
+        employeeId: employee?.id || employee?._id,
+        attendanceType: 'half'
       });
 
       if (response.status === 200) {
@@ -238,7 +224,7 @@ const AttendancePage = () => {
             <p className="text-xl font-bold text-slate-800">{formatTime(currentTime)}</p>
           </div>
         </div>
-        
+
         {/* Salary Information */}
         {salary && (
           <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
